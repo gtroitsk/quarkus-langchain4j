@@ -34,7 +34,7 @@ public class FilesystemToolProvider implements Supplier<ToolProvider> {
     public ToolProvider get() {
         if(toolProvider == null) {
             transport = new StdioMcpTransport.Builder()
-                    .command(List.of("npm", "exec",
+                    .command(List.of(npmCommand(), "exec",
                             "@modelcontextprotocol/server-filesystem@0.6.2",
                             // allowed directory for the server to interact with
                             new File("playground").getAbsolutePath()
@@ -49,5 +49,10 @@ public class FilesystemToolProvider implements Supplier<ToolProvider> {
                     .build();
         }
         return toolProvider;
+    }
+
+    private static String npmCommand() {
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+        return isWindows ? "npm.cmd" : "npm";
     }
 }
